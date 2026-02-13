@@ -49,4 +49,4 @@ buck-out/
 /vendor/bundle/
 
 # Native Wechat
-dist/
+dist/*

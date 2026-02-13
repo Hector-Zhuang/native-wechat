@@ -1,6 +1,6 @@
 {
     "name": "native-wechat",
-    "version": "1.0.21",
+    "version": "1.0.22",
     "description": "A React Native library for supporting Wechat APIs on Android and iOS",
     "react-native": "src/index",
     "main": "dist/index.mjs",
@@ -55,14 +55,6 @@
     "peerDependencies": {
         "react": "*",
         "react-native": "*"
-    },
-    "codegenConfig": {
-        "name": "NativeWechatSpec",
-        "type": "modules",
-        "jsSrcsDir": "src",
-        "android": {
-            "javaPackageName": "com.hector.nativewechat"
-        }
     },
     "config": {
         "commitizen": {
