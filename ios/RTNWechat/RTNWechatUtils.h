@@ -12,6 +12,9 @@
 
 + (void)downloadFile:(NSURL *)url onSuccess:(void (^)(NSData * _Nullable data))onSuccess onError:(void (^)(NSError *error))onError;
 
+
++ (NSData *_Nonnull)compressImage:(NSData *_Nonnull)data toByte:(NSUInteger)maxLength;
+
 @end
 
 

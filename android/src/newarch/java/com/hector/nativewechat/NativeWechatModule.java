@@ -89,4 +89,8 @@ public class NativeWechatModule extends NativeWechatSpec {
   @ReactMethod
   public void addListener(String eventName) {
   }
+
+  @ReactMethod
+  public void removeListeners(Integer count) {
+  }
 }

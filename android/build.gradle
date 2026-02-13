@@ -57,11 +57,3 @@ dependencies {
   api 'com.tencent.mm.opensdk:wechat-sdk-android:+'
 }
 
-project.rootProject.allprojects {
-  configurations.all {
-    resolutionStrategy {
-      force "com.facebook.react:react-native:0.70.+"
-      force "com.facebook.react:hermes-engine:0.70.+"
-    }
-  }
-}

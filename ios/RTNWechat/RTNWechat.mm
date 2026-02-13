@@ -145,7 +145,7 @@ RCT_EXPORT_METHOD(shareImage:
         imageObject.imageData = data;
         
         WXMediaMessage *message = [WXMediaMessage message];
-        message.thumbData = data;
+        message.thumbData = [RTNWechatUtils compressImage:data toByte:32768];;
         message.mediaObject = imageObject;
         
         SendMessageToWXReq *req = [[SendMessageToWXReq alloc] init];
@@ -255,7 +255,7 @@ RCT_EXPORT_METHOD(shareMiniProgram:
     object.userName = params[@"userName"];
     object.path = params[@"path"];
     object.withShareTicket = params[@"withShareTicket"];
-    object.miniProgramType = (WXMiniProgramType) [params[@"miniProgramType"] unsignedIntValue];
+    object.miniProgramType = (WXMiniProgramType) [params[@"miniprogramType"] unsignedIntValue];
     
     WXMediaMessage *message = [WXMediaMessage message];
     message.title = params[@"title"];
@@ -341,7 +341,7 @@ RCT_EXPORT_METHOD(launchMiniProgram:
     
     req.userName = [params valueForKey:@"userName"];
     req.path = [params valueForKey:@"path"];
-    req.miniProgramType = (WXMiniProgramType)[[params valueForKey:@"miniProgramType"] unsignedIntValue];
+    req.miniProgramType = (WXMiniProgramType)[[params valueForKey:@"miniprogramType"] unsignedIntValue];
     
     [WXApi sendReq:req completion:^(BOOL success){
         callback(@[[NSNumber numberWithBool:!success]]);

@@ -1,2 +1,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.hector.nativewechat"></manifest>
+    package="com.hector.nativewechat">
+
+    <application>
+
+        <!-- FileProvider configuration -->
+        <provider
+            android:name=".NativeWechatFileProvider"
+            android:authorities="${applicationId}.nativewechat.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_provider_paths" />
+        </provider>
+    </application>
+</manifest>

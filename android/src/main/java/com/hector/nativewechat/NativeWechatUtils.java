@@ -110,4 +110,89 @@ public class NativeWechatUtils {
 
     void onResponse(@NonNull Bitmap bitmap);
   }
+
+  public interface DownloadFileCallback {
+    void onFailure(@NonNull Call call, @NonNull IOException e);
+
+    void onResponse(@NonNull File file);
+  }
+
+  public static void downloadToFile(String url, File targetFile, DownloadFileCallback callback) {
+    Request request = new Request.Builder().url(url).build();
+
+    client.newCall(request).enqueue(new Callback() {
+      @Override
+      public void onFailure(@NonNull Call call, @NonNull IOException e) {
+        callback.onFailure(call, e);
+      }
+
+      @Override
+      public void onResponse(@NonNull Call call, @NonNull Response response) {
+        try (ResponseBody responseBody = response.body()) {
+          if (!response.isSuccessful() || responseBody == null) {
+            throw new IOException("Unexpected code " + response);
+          }
+
+          try (FileOutputStream fos = new FileOutputStream(targetFile)) {
+            fos.write(responseBody.bytes());
+            // Ensure the file is fully written before calling back
+            fos.getFD().sync();
+          }
+
+          // Ensure the UI thread is not blocked if callback does heavy work
+          // Consider using a Handler or runOnUiThread if needed for the callback
+          callback.onResponse(targetFile);
+
+        } catch (IOException e) {
+          // Propagate IOExceptions to the failure callback
+          callback.onFailure(call, e);
+        } catch (Exception e) {
+          // Catch any other unexpected errors during file writing
+          callback.onFailure(call, new IOException("Failed to write downloaded file: " + e.getMessage(), e));
+        }
+      }
+    });
+  }
+
+  public static Bitmap loadBitmapFromFile(String filePath, int targetSize) {
+    try {
+      // First, decode with inJustDecodeBounds=true to check dimensions
+      final BitmapFactory.Options options = new BitmapFactory.Options();
+      options.inJustDecodeBounds = true;
+      BitmapFactory.decodeFile(filePath, options);
+
+      // Calculate inSampleSize if needed (similar logic could be used for targetSize)
+      // For simplicity, let's just decode the full bitmap for now
+      // You might want to add resizing logic here based on targetSize
+      // similar to compressImage if needed.
+      options.inJustDecodeBounds = false;
+      Bitmap bitmap = BitmapFactory.decodeFile(filePath, options);
+
+      // Optional: Compress or resize based on targetSize if necessary
+      if (bitmap != null && targetSize > 0) {
+        // You could reuse compressImage or implement specific resizing logic
+        // For the thumbnail, we need a small bitmap. Let's scale it down if it's large.
+        // This is a simple scaling example, adjust as needed.
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        float scale = Math.min((float) targetSize / width, (float) targetSize / height);
+        if (scale < 1.0) { // Only scale down
+           Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, (int) (width * scale), (int) (height * scale), true);
+           if (scaledBitmap != bitmap) { // Avoid recycling if createScaledBitmap returned the original
+              bitmap.recycle();
+           }
+           bitmap = scaledBitmap;
+        }
+        // Optionally, could compress here too like in compressImage
+      }
+
+      return bitmap;
+    } catch (OutOfMemoryError oom) {
+      Log.e("NativeWechatUtils", "OutOfMemoryError loading bitmap from file: " + filePath, oom);
+      return null;
+    } catch (Exception e) {
+      Log.e("NativeWechatUtils", "Error loading bitmap from file: " + filePath, e);
+      return null;
+    }
+  }
 }
