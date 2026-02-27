@@ -7,7 +7,7 @@
 
 #import <React/RCTBridgeModule.h>
 #import <React/RCTEventEmitter.h>
-#import "WXApi.h"
+#import "WechatOpenSDK/WXApi.h"
 
 @interface RTNWechatRespDataHelper: NSObject
 

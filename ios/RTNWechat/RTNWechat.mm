@@ -1,11 +1,7 @@
 #import "RTNWechat.h"
-#import "WXApiObject.h"
+#import "WechatOpenSDK/WXApiObject.h"
 #import "RTNWechatUtils.h"
 #import "RTNWechatRespDataHelper.h"
-
-#ifdef RCT_NEW_ARCH_ENABLED
-#import "NativeWechatSpec.h"
-#endif
 
 @implementation RTNWechat
 {
@@ -395,13 +391,5 @@ RCT_EXPORT_METHOD(openCustomerService:
 {
     hasListeners = NO;
 }
-
-#ifdef RCT_NEW_ARCH_ENABLED
-- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
-    (const facebook::react::ObjCTurboModule::InitParams &)params
-{
-    return std::make_shared<facebook::react::NativeWechatSpecJSI>(params);
-}
-#endif
 
 @end
